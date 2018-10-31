@@ -1850,6 +1850,10 @@ type Probe struct {
 	// Minimum consecutive failures for the probe to be considered failed after having succeeded.
 	// +optional
 	FailureThreshold int32
+	// Whether to delay starting this probe until after the corresponding ReadinessProbe has
+	// succeeded. Only valid for LivenessProbe, ignored for ReadinessProbe.
+	// +optional
+	WaitForReadinessProbe bool
 }
 
 // PullPolicy describes a policy for if/when to pull a container image
