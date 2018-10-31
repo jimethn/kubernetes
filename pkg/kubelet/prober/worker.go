@@ -205,6 +205,13 @@ func (w *worker) doProbe() (keepGoing bool) {
 			w.pod.Spec.RestartPolicy != v1.RestartPolicyNever
 	}
 
+	if w.probeType == liveness && w.spec.WaitForReadinessProbe {
+		if status, found := w.probeManager.readinessManager.Get(w.containerID); !found || status == results.Failure {
+			// Readiness probe hasn't succeeded yet, keep going
+			return true
+		}
+	}
+
 	if int32(time.Since(c.State.Running.StartedAt.Time).Seconds()) < w.spec.InitialDelaySeconds {
 		return true
 	}
